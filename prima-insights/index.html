@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIMA Clock</title>
+<title>PRIMA Insights</title>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js">
 
@@ -16,6 +16,13 @@
   --card:#161a22;
   --text:#e6e9ef;
   --muted:#9aa3b2;
+}
+.meta{
+  color: var(--text);
+  opacity:.9;
+  max-width:820px;
+  line-height:1.5;
+  margin:0 0 10px;
 }
 
 body{
@@ -337,11 +344,26 @@ video,img{
 <body>
 <div id="app" class="container">
 <h1>PRIMA Insights</h1>
-<p>
-Sales agents automatically receive weekly reminders about customers who showed
-purchase interest but did not order.
-PRIMA Insights detects these signals, assigns responsibility and guides the follow-up process.
+<p class="meta">
+Internal sales intelligence platform used by a hospitality supplier
+to activate dormant customer demand and structure follow-ups across the sales team.
 </p>
+
+<p>
+Built a sales activation system that turns passive shop behavior into actionable leads.
+Eliminated manual follow-ups and enabled agents to systematically recover missed revenue opportunities.
+</p>
+
+
+<h2>Impact</h2>
+<div class="card">
+  <ul>
+    <li>Used weekly by the sales team</li>
+    <li>Replaced manual follow-up workflows</li>
+    <li>Turned shop analytics into actionable leads</li>
+    <li>Centralized customer interaction visibility</li>
+  </ul>
+</div>
 
 <h2>Core Flow</h2>
 
@@ -366,12 +388,13 @@ PRIMA Insights detects these signals, assigns responsibility and guides the foll
 
 <div class="card">
 <p>
-Customers frequently browse products in the shop without placing an order.
-For sales agents this interest remains invisible in daily operations.
+Shop behavior data existed, but wasn’t operationally accessible for sales.
+Follow-ups relied on manual communication and personal knowledge.
 
-Follow-ups depend on coincidence or manual communication,
-so potential revenue is often lost despite existing demand.
+Goal: convert passive events into assigned, low-noise actions
+that integrate into a weekly workflow.
 </p>
+
 </div>
 
 <h2>Approach</h2>
@@ -384,6 +407,8 @@ dashboard showing the responsible accounts and their detailed interactions.
 This turns passive shop activity into a structured follow-up workflow.
 </p>
 </div>
+
+
 
 
 
@@ -462,11 +487,12 @@ This turns passive shop activity into a structured follow-up workflow.
     <h2>My Contribution</h2>
     <div class="card">
       <p>
-      Designed and built the system independently — from architecture and data model
-      to backend services, frontend and production deployment.
+      Owned end-to-end delivery: domain model, event processing pipeline, API design,
+      RBAC/auth flows, frontend app and production deployment.
 
-      Implemented both microservices, their communication logic and the CI/CD pipeline.
+      Built both services, their integration and CI/CD.
       </p>
+
     </div>
   </div>
 
