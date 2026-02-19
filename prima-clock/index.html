@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRIMA Clock</title>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js">
+
+</script>
+<script>
+window.__FEATURE_VIDEOS__ = [
+"edit-overlap.mp4",
+"metrics.mp4",
+"admin.mp4",
+"project-assign-timer.mp4"
+];
+</script>
+
+<script>
+window.__FEATURE_VIDEOS__.forEach(v=>{
+  const l=document.createElement("link");
+  l.rel="preload";
+  l.as="video";
+  l.href="assets/"+v;
+  document.head.appendChild(l);
+});
+</script>
+
+<style>
+:root{
+  --bg:#0f1115;
+  --card:#161a22;
+  --text:#e6e9ef;
+  --muted:#9aa3b2;
+}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:28px 18px;
+}
+
+h1{font-size:38px;margin-bottom:8px}
+h2{margin-top:60px}
+p{color:var(--muted)}
+
+.card{
+  background:var(--card);
+  padding:18px;
+  border-radius:16px;
+  margin:18px 0;
+  box-shadow:0 10px 25px rgba(0,0,0,.35);
+}
+
+video,img{
+  width:100%;
+  border-radius:14px;
+  margin-top:14px;
+  cursor:pointer;
+}
+
+/* ---------------- Core ---------------- */
+
+.core-showcase{text-align:center;padding:30px 20px 32px}
+.core-video video{max-height:520px;object-fit:contain;margin-bottom:18px}
+.core-text h3{margin:6px 0 4px;font-size:24px}
+.core-text p{margin:0;max-width:620px;margin-inline:auto}
+
+/* ---------------- Features ---------------- */
+
+.feature-showcase{text-align:center;padding:30px 20px 40px}
+.feature-video{position:relative}
+.feature-video video{max-height:520px;object-fit:contain;margin-bottom:18px}
+.feature-text h3{margin:6px 0 4px;font-size:22px}
+.feature-text p{margin:0 0 16px}
+
+.feature-dots{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:14px
+}
+
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#5c6677;
+  opacity:.4;
+  cursor:pointer;
+  transition:.25s
+}
+
+.dot:hover{opacity:.7}
+.dot.active{
+  opacity:1;
+  background:#fff;
+  transform:scale(1.3)
+}
+
+.nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:none;
+  background:rgba(20,25,35,.65);
+  color:#fff;
+  font-size:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(6px);
+  cursor:pointer;
+  transition:.25s;
+}
+
+.nav:hover{
+  background:rgba(255,255,255,.15);
+  transform:translateY(-50%) scale(1.08)
+}
+
+.prev{left:10px}
+.next{right:10px}
+
+/* ---------------- Interface Stage ---------------- */
+
+.interface-showcase{
+  position:relative;
+  margin-top:80px;
+  perspective:1600px;
+  transform-style:preserve-3d;
+  padding-bottom:160px;
+}
+
+
+.showcase-desktop{
+  max-width:900px;
+  margin:0 auto;
+  background:#000;
+  padding:12px;
+  border-radius:18px;
+  box-shadow:0 60px 140px rgba(0,0,0,.75);
+  position:relative;
+  transform:rotateX(6deg) translateZ(40px);
+  transform-style:preserve-3d;
+  z-index:5;
+}
+
+.showcase-desktop img{
+  border-radius:10px;
+  display:block;
+}
+.showcase-desktop{
+  max-width:860px;
+  transform:rotateX(6deg) translateZ(60px);
+}
+
+
+.float-device{
+  position:absolute;
+  padding:14px;
+  border-radius:34px;
+  background:linear-gradient(160deg,#0b0d12,#1a1f29);
+  box-shadow:
+    0 50px 120px rgba(0,0,0,.8),
+    inset 0 0 0 2px rgba(255,255,255,.06),
+    inset 0 0 40px rgba(255,255,255,.04);
+  backdrop-filter: blur(6px);
+  transform-style:preserve-3d;
+  will-change:transform;
+  transition:.4s ease;
+}
+
+.float-device img{
+  display:block;
+  border-radius:22px;
+  background:#000;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    inset 0 0 60px rgba(0,0,0,.45);
+}
+
+
+.float-device::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:
+    linear-gradient(120deg,
+      rgba(255,255,255,.25) 0%,
+      rgba(255,255,255,.08) 25%,
+      transparent 45%);
+  pointer-events:none;
+}
+
+.tablet{
+  width:420px;
+  right:-120px;
+  bottom:-90px;
+  transform:rotate(10deg) translateZ(-60px) scale(.94);
+  opacity:.78;
+  z-index:0;
+}
+
+
+.phone-left{
+  width:215px;
+  left:-30px;
+  bottom:-30px;
+  transform:rotate(-7deg) translateZ(120px);
+  z-index:15;
+}
+
+
+
+
+.phone-right{
+  width:230px;
+  right:-35px;
+  top:30px;
+
+  transform:
+    rotateY(-18deg)
+    rotateX(6deg)
+    rotateZ(6deg)
+    translateZ(160px);
+
+  z-index:20;
+  animation:floatHero 7s ease-in-out infinite;
+}
+
+
+.phone-left,
+.phone-right{
+  padding:10px;
+  border-radius:42px;
+  background:linear-gradient(165deg,#0a0c10,#202632);
+}
+.phone-left img,
+.phone-right img{
+  border-radius:34px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    inset 0 0 80px rgba(0,0,0,.55),
+    0 2px 6px rgba(0,0,0,.6);
+}
+.phone-left::before,
+.phone-right::before{
+  content:"";
+  position:absolute;
+  top:6px;
+  left:50%;
+  transform:translateX(-50%);
+  width:96px;
+  height:22px;
+  border-radius:18px;
+  background:#050608;
+  box-shadow:0 4px 10px rgba(0,0,0,.8);
+  z-index:5;
+}
+.phone-left::after,
+.phone-right::after{
+  content:"";
+  position:absolute;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:38px;
+  height:6px;
+  border-radius:6px;
+  background:#1a1f27;
+  box-shadow:0 0 0 2px rgba(0,0,0,.4);
+  z-index:6;
+}
+
+
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(5,8,15,.9);
+  backdrop-filter:blur(12px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:40px;
+}
+
+.lightbox img,
+.lightbox video{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  border-radius:14px;
+  box-shadow:0 60px 160px rgba(0,0,0,.9);
+}
+
+.close{
+  position:absolute;
+  top:22px;
+  right:26px;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:none;
+  background:rgba(20,25,35,.75);
+  color:#fff;
+  font-size:28px;
+  cursor:pointer;
+  backdrop-filter:blur(8px);
+  transition:.2s;
+}
+
+.close:hover{
+  background:rgba(255,255,255,.15);
+  transform:scale(1.1);
+}
+
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:40px;
+}
+
+@media (max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+  .interface-showcase{
+    display:none;
+  }
+}
+
+
+
+
+</style>
+</head>
+
+<body>
+<div id="app" class="container">
+<h1>PRIMA Clock</h1>
+<p>
+Internal operations software for tracking billable work across clients, projects and departments.
+Built as a production system for daily business use at Prima GmbH.
+</p>
+
+<h2>Core Flow</h2>
+
+<div class="core-showcase card">
+  <div class="core-video">
+    <video autoplay loop muted playsinline @click="open('assets/hero.mp4')">
+      <source src="assets/hero.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="core-text">
+    <h3>Daily Workflow</h3>
+<p>
+Start and stop timers, add notes and switch projects — sessions become verifiable billing records.
+</p>
+
+  </div>
+</div>
+
+<h2>Purpose</h2>
+
+<div class="card">
+<p>
+Companies often track time, but rarely track it in a way that connects employees, projects and customers reliably.
+PRIMA Clock was developed to create a single source of truth for billable work.
+Every recorded session can be reviewed, corrected and analyzed before invoicing.
+</p>
+</div>
+
+<h2>Design Approach</h2>
+<div class="card">
+<p>
+Instead of tracking attendance, the system tracks responsibility.
+Work is always connected to a customer and project, enabling transparent cost allocation,
+department comparison and reliable operational decisions.
+</p>
+</div>
+
+<h2>Key Features</h2>
+
+<div class="feature-showcase card">
+  <div class="feature-video">
+    <button class="nav prev" @click="prev">&#10094;</button>
+
+   <video :key="active.video" autoplay loop muted playsinline preload="auto" @click="open('assets/feature/'+active.video)">
+  <source :src="'assets/feature/'+active.video" type="video/mp4">
+</video>
+
+
+    <button class="nav next" @click="next">&#10095;</button>
+  </div>
+
+  <div class="feature-text">
+    <h3>{{active.title}}</h3>
+    <p>{{active.text}}</p>
+  </div>
+
+  <div class="feature-dots">
+    <span v-for="(f,i) in features"
+      :key="i"
+      :class="['dot',{active:i===index}]"
+      @click="index=i"></span>
+  </div>
+</div>
+
+
+<div class="interface-showcase">
+  <h2>Interface</h2>
+
+  <div class="showcase-desktop" v-if="ui.desktop">
+    <img :src="'assets/interface/'+ui.desktop" @click="open('assets/interface/'+ui.desktop)">
+  </div>
+
+  <div
+    v-for="(device,i) in ui.devices"
+    :key="i"
+    class="float-device"
+    :class="device.class"
+  >
+    <img :src="'assets/interface/'+device.img" @click="open('assets/interface/'+device.img)">
+  </div>
+
+</div>
+
+<div class="grid">
+
+  <div>
+    <h2>System Context</h2>
+    <div class="card">
+      <p>
+      This system runs as a full stack business application with authentication,
+      role management, database persistence and automated CI/CD container deployment.
+      The interface shown here is only the visible layer of a larger operational infrastructure.
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <h2>My Contribution</h2>
+    <div class="card">
+      <p>
+      Owned the project end-to-end — from requirements analysis and system design
+      to implementation, testing and CI/CD deployment.
+      Designed the architecture, built the frontend and backend, modeled the database
+      and put the system into production use.
+      </p>
+    </div>
+  </div>
+
+  <div>
+  <h2>Tech Stack</h2>
+  <div class="card">
+    <p>
+    <strong>Frontend:</strong> Vue 3, TypeScript<br>
+    <strong>Backend:</strong> Spring Boot (Java)<br>
+    <strong>Database:</strong> PostgreSQL<br>
+    <strong>Sessions & Cache:</strong> Redis<br>
+    <strong>Infrastructure:</strong> Docker, NGINX
+    </p>
+  </div>
+</div>
+
+
+</div>
+
+
+
+<div class="lightbox" v-if="lightbox">
+  <button class="close" @click="lightbox=null">×</button>
+  <img v-if="!isVideo(lightbox)" :src="lightbox">
+  <video v-else controls autoplay>
+    <source :src="lightbox" type="video/mp4">
+  </video>
+</div>
+
+</div>
+
+<script>
+const { createApp } = Vue
+
+createApp({
+  data(){
+    return{
+      lightbox:null,
+      index:0,
+     ui:{
+    desktop:"dekstop.PNG",
+    devices:[
+      {class:"phone-left", img:"mobile1.PNG"},
+      {class:"phone-right", img:"mobile.PNG"},
+      {class:"tablet", img:"tablet.PNG"}
+    ]
+  },
+
+      features:[
+       {title:"Timeline",text:"Review and correct recorded work sessions.",video:"edit-overlap.mp4"},
+{title:"Metrics",text:"Compare clients and departments with filtered time analytics.",video:"metrics.mp4"},
+{title:"Admin",text:"Company-wide timeline oversight and adjustments.",video:"admin.mp4"},
+{title:"Project Assignment",text:"Join or leave projects and start tracking instantly.",video:"project-assign-timer.mp4"},
+
+      ]
+    }
+  },
+
+  computed:{
+    active(){ return this.features[this.index] }
+  },
+
+  methods:{
+    open(src){ this.lightbox=src },
+    isVideo(src){ return src.endsWith(".mp4") },
+    next(){ this.index=(this.index+1)%this.features.length },
+    prev(){ this.index=(this.index-1+this.features.length)%this.features.length }
+  }
+
+}).mount("#app")
+</script>
+
+</body>
+</html>
