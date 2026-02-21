@@ -14,13 +14,12 @@
 <div id="app" class="container">
 <h1>PRIMA Clock</h1>
 <p class="meta">
-Production system used by internal teams for operational and financial accuracy.
+Production system used by internal teams as a reliable basis for cost allocation and invoicing preparation.
 </p>
 
 <p>
-Internal production system for tracking and validating billable work across
-clients, projects and departments. Serves as the operational basis for
-cost allocation and invoicing.
+Internal production system for tracking and validating billable work across clients, projects and departments.
+Designed for correctness, traceability and reproducible billing records — not just time logging.
 </p>
 
 <div class="grid">
@@ -29,9 +28,9 @@ cost allocation and invoicing.
     <h2>Purpose</h2>
     <div class="card">
       <p>
-      Time tracking without customer linkage creates unreliable billing.
-      PRIMA Clock enforces responsibility by connecting every session
-      to a client and project before it can be recorded.
+      Time tracking without a strict ownership chain creates ambiguity in billing.
+      PRIMA Clock enforces responsibility by requiring every recorded session
+      to be linked to a client and project.
       </p>
     </div>
   </div>
@@ -40,24 +39,25 @@ cost allocation and invoicing.
     <h2>Design Approach</h2>
       <div class="card">
         <p>
-        The system models responsibility explicitly:
-        users, projects and customers are relationally linked,
-        enabling filtered analytics, department comparison and
-        billing validation workflows.
+        The system models financial ownership explicitly:
+        User → Session → Project → Client.
+        This structure enables consistent reporting, department comparisons and
+        reliable preparation for invoicing.
         </p>
       </div>
   </div>
 
   <div>
-  <h2>Impact</h2>
-  <div class="card">
-    <ul>
-      <li>Used daily across departments</li>
-      <li>Created verifiable billing records</li>
-      <li>Centralized project-based cost allocation</li>
-    </ul>
+    <h2>Impact</h2>
+    <div class="card">
+      <ul>
+        <li>Replaced informal/manual time tracking with a single source of truth</li>
+        <li>Enabled reproducible, traceable billing records</li>
+        <li>Centralized project-based cost allocation across departments</li>
+      </ul>
+    </div>
   </div>
-</div>
+
 </div>
 
 <h2>Core Flow</h2>
@@ -71,12 +71,11 @@ cost allocation and invoicing.
   <div class="core-text">
     <h3>Daily Workflow</h3>
     <p>
-    Start and stop timers, add notes and switch projects — sessions become verifiable billing records.
+    Start and stop timers, add notes and switch projects — sessions become consistent, traceable records
+    that can be used for cost allocation and invoicing preparation.
     </p>
   </div>
 </div>
-
-
 
 <h2>Key Features</h2>
 
@@ -98,7 +97,6 @@ cost allocation and invoicing.
 
     </div>
 
-
     <button class="nav next" @click="next">&#10095;</button>
   </div>
 
@@ -114,7 +112,70 @@ cost allocation and invoicing.
       @click="index=i"></span>
   </div>
 </div>
+<div class="grid">
 
+  <div>
+    <h2>Traceability & Corrections</h2>
+    <div class="card">
+      <p>
+      Work entries can be created and adjusted afterwards, since real workflows are often reconstructed later
+      (e.g. forgotten timers or incomplete notes).
+      </p>
+      <p>
+      The system therefore focuses on traceability instead of rigidity:
+      every entry remains attributable to a user, project and time range,
+      making later changes understandable rather than hidden.
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <h2>Consistency Rules</h2>
+    <div class="card">
+      <p>
+      Even with editable data, the application prevents inconsistent records before they affect reporting:
+      </p>
+      <ul>
+        <li>No overlapping sessions per user</li>
+        <li>Project assignment required</li>
+        <li>Duration validation</li>
+        <li>Timer recovery for forgotten stops</li>
+        <li>Manual entries allowed but validated</li>
+      </ul>
+    </div>
+  </div>
+
+  <div>
+    <h2>Architecture Overview</h2>
+    <div class="card">
+      <p>
+      PRIMA Clock runs as a transactional full-stack application.
+      The backend validates and persists records in PostgreSQL, while Redis supports active sessions
+      and responsive interaction.
+      </p>
+      <p>
+      The interface allows flexible input, but correctness is enforced server-side to keep reporting consistent.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<div>
+  <h2>Engineering Challenge</h2>
+  <div class="card">
+    <p>
+    The main challenge was unifying different recording behaviors into a single consistent data model.
+    Some users track time live with timers, others reconstruct their work at the end of the day,
+    and others correct forgotten sessions afterwards.
+    </p>
+    <p>
+    The system therefore processes all inputs through the same validation pipeline.
+    Whether time comes from a running timer or a manual entry, it is normalized into
+    the same session structure and validated server-side to keep reporting consistent.
+    </p>
+  </div>
+</div>
 
 <div class="interface-showcase">
   <h2>Interface</h2>
@@ -140,9 +201,15 @@ cost allocation and invoicing.
     <h2>System Context</h2>
     <div class="card">
       <p>
-      This system runs as a full stack business application with authentication,
-      role management, database persistence and automated CI/CD container deployment.
-      The interface shown here is only the visible layer of a larger operational infrastructure.
+      The system operates as part of the company’s operational infrastructure rather than an isolated tool.
+      It includes authentication, role-based access control, database persistence and automated CI/CD deployment.
+      </p>
+      <p>
+      An import/export API allows integration into ERP workflows, enabling recorded work to be transferred
+      into downstream processes such as accounting and project controlling.
+      </p>
+      <p>
+      The interface shown here represents only the human interaction layer of a larger data flow between systems.
       </p>
     </div>
   </div>
@@ -160,22 +227,19 @@ cost allocation and invoicing.
   </div>
 
   <div>
-  <h2>Tech Stack</h2>
-  <div class="card">
-    <p>
-    <strong>Frontend:</strong> Vue 3, TypeScript<br>
-    <strong>Backend:</strong> Spring Boot (Java)<br>
-    <strong>Database:</strong> PostgreSQL<br>
-    <strong>Sessions & Cache:</strong> Redis<br>
-    <strong>Infrastructure:</strong> Docker, NGINX
-    </p>
+    <h2>Tech Stack</h2>
+    <div class="card">
+      <p>
+      <strong>Frontend:</strong> Vue 3, TypeScript<br>
+      <strong>Backend:</strong> Spring Boot (Java)<br>
+      <strong>Database:</strong> PostgreSQL<br>
+      <strong>Sessions & Cache:</strong> Redis<br>
+      <strong>Infrastructure:</strong> Docker, NGINX
+      </p>
+    </div>
   </div>
-</div>
-
 
 </div>
-
-
 
 <div class="lightbox" v-if="lightbox">
   <button class="close" @click="lightbox=null">×</button>
@@ -196,15 +260,16 @@ cost allocation and invoicing.
 </div>
 </div>
 
-<script>const { createApp } = Vue
+<script>
+const { createApp } = Vue
 
 createApp({
 
   data(){
-  return{
-    lightbox:null,
-    index:0,
-    loading:true,
+    return{
+      lightbox:null,
+      index:0,
+      loading:true,
       ui:{
         desktop:"dekstop.PNG",
         devices:[
@@ -214,10 +279,10 @@ createApp({
         ]
       },
       features:[
-        {title:"Timeline",text:"Review and correct recorded work sessions.",video:"feature1.mp4"},
-        {title:"Project Assignment",text:"Join or leave projects and start tracking instantly.",video:"feature2.mp4"},
-        {title:"Admin",text:"Company-wide timeline oversight and adjustments.",video:"feature3.mp4"},
-        {title:"Metrics",text:"Compare clients and departments with filtered time analytics.",video:"feature4.mp4"},
+        {title:"Timeline",text:"Review sessions with a complete historical view. Corrections are handled explicitly to preserve traceability.",video:"feature1.mp4"},
+        {title:"Project Assignment",text:"Sessions require project and client assignment, enforcing ownership before time can be recorded.",video:"feature2.mp4"},
+        {title:"Admin",text:"Company-wide oversight with controlled adjustments and period-level protection for billing consistency.",video:"feature3.mp4"},
+        {title:"Metrics",text:"Compare clients and departments using consistent, validated data for cost allocation insights.",video:"feature4.mp4"},
       ]
     }
   },
@@ -257,6 +322,7 @@ createApp({
         v.play()
       }
     },
+
     videoLoaded(){
       this.loading = false
     },
