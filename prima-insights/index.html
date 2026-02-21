@@ -5,11 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PRIMA Insights</title>
 
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js">
-
-</script>
-
-
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <link rel="stylesheet" href="../styles.css">
 </head>
 
@@ -17,15 +13,14 @@
 <div id="app" class="container">
 <h1>PRIMA Insights</h1>
 <p class="meta">
-Internal sales intelligence platform used by a hospitality supplier
-to activate dormant customer demand and structure follow-ups across the sales team.
+Internal sales intelligence platform used by a hospitality supplier to activate dormant customer demand
+and structure follow-ups across the sales team.
 </p>
 
 <p>
-Built a sales activation system that turns passive shop behavior into actionable leads.
-Eliminated manual follow-ups and enabled agents to systematically recover missed revenue opportunities.
+Built a sales activation system that turns passive shop behavior into assigned follow-up actions.
+Reduced manual lead hunting and enabled agents to systematically recover missed revenue opportunities.
 </p>
-
 
 <div class="grid">
 
@@ -33,11 +28,11 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
     <h2>Problem</h2>
     <div class="card">
       <p>
-      Shop behavior data existed, but wasn’t operationally accessible for sales.
-      Follow-ups relied on manual communication and personal knowledge.
-
-      Goal: convert passive events into assigned, low-noise actions
-      that integrate into a weekly workflow.
+      Shop behavior data existed, but it was not operationally accessible for sales.
+      Follow-ups relied on manual communication, personal memory and inconsistent routines.
+      </p>
+      <p>
+      Goal: convert passive events into assigned, low-noise actions that integrate into a weekly workflow.
       </p>
     </div>
   </div>
@@ -46,27 +41,27 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
     <h2>Approach</h2>
     <div class="card">
       <p>
-      PRIMA Insights transforms customer behavioral data into actionable sales workflows  and generates automated sales activation pipeline
-      whenever relevant activity occurs.
-
-      This turns passive shop activity into a structured follow-up workflow.
+        PRIMA Insights converts behavioral signals into assigned follow-up actions.
+        Relevant activity triggers lead creation, ownership assignment and automated weekly activation emails.
+      </p>
+      This turns passive shop activity into a consistent follow-up pipeline instead of isolated analytics.
       </p>
     </div>
   </div>
 
   <div>
-  <h2>Impact</h2>
-  <div class="card">
-    <ul>
-      <li>Used weekly by the sales team</li>
-      <li>Replaced manual follow-up workflows</li>
-      <li>Turned shop analytics into actionable leads</li>
-      <li>Centralized customer interaction visibility</li>
-    </ul>
+    <h2>Impact</h2>
+    <div class="card">
+      <ul>
+        <li>Used weekly by the sales team</li>
+        <li>Replaced manual follow-up workflows</li>
+        <li>Turned shop analytics into assigned leads</li>
+        <li>Centralized customer interaction visibility</li>
+      </ul>
+    </div>
   </div>
-</div>
-</div>
 
+</div>
 
 <h2>Core Flow</h2>
 
@@ -79,19 +74,12 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
   <div class="core-text">
     <h3>Weekly Lead Activation</h3>
     <p>
-    Automated weekly emails highlight customer interest without purchase.
-    Each email links directly to the dashboard, where agents can filter assigned companies
-    and review detailed insights before initiating follow-up.
+      Automated weekly emails highlight customer interest without purchase.
+      Each email links directly to the dashboard, where agents can filter assigned companies
+      and review detailed activity before initiating follow-up.
     </p>
   </div>
 </div>
-
-
-
-
-
-
-
 
 <h2>Key Features</h2>
 
@@ -99,8 +87,7 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
   <div class="feature-video">
     <button class="nav prev" @click="prev">&#10094;</button>
 
-   <div class="video-wrapper">
-
+    <div class="video-wrapper">
       <video
         ref="featureVideo"
         playsinline
@@ -108,11 +95,8 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
         @click="open('assets/feature/'+active.video)"
         @loadeddata="videoLoaded"
       ></video>
-
       <div class="spinner" v-if="loading"></div>
-
     </div>
-
 
     <button class="nav next" @click="next">&#10095;</button>
   </div>
@@ -130,6 +114,50 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
   </div>
 </div>
 
+<div class="grid">
+
+  <div>
+    <h2>Signal Interpretation</h2>
+    <div class="card">
+      <p>
+      The main challenge was avoiding noise: most shop activity represents normal purchasing behavior,
+      not sales opportunities. The system therefore focuses on detecting unfulfilled demand rather than activity itself.
+      </p>
+      <p>
+      Regular orders and routine re-purchases are filtered out, while interactions without conversion
+      are interpreted as potential interest.
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <h2>Lead Qualification</h2>
+    <div class="card">
+      <p>
+      Behavioral signals are evaluated and reduced to a small set of relevant follow-ups.
+      Instead of exposing every event, the platform produces qualified lead candidates
+      that can be reviewed and owned by a responsible agent.
+      </p>
+      <p>
+      This keeps the system useful for sales rather than overwhelming them with analytics data.
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <h2>Operational Pipeline</h2>
+    <div class="card">
+      <p>
+      Incoming activity passes through a stable processing flow:
+      ingest → filter routine behavior → detect unmet interest → assign responsibility → notify → review.
+      </p>
+      <p>
+      The weekly reminder acts as a lightweight trigger, integrating the system into a consistent sales routine.
+      </p>
+    </div>
+  </div>
+
+</div>
 
 <div class="interface-showcase">
   <h2>Interface</h2>
@@ -146,8 +174,8 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
   >
     <img :src="'assets/interface/'+device.img" @click="open('assets/interface/'+device.img)">
   </div>
-
 </div>
+
 <div class="grid">
 
   <div>
@@ -156,9 +184,10 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
       <p>
       Production microservice architecture composed of a core processing service
       and a dedicated web application backend.
-      The core service performs data transformation, behavioral analysis and
-      automated email delivery, while the web backend handles authentication,
-      role management and dashboard interaction.
+      </p>
+      <p>
+      The processing service performs data transformation, aggregation and automated email delivery,
+      while the web backend handles authentication, RBAC and dashboard interaction.
       </p>
     </div>
   </div>
@@ -167,12 +196,10 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
     <h2>My Contribution</h2>
     <div class="card">
       <p>
-      Owned end-to-end delivery: domain model, event processing pipeline, API design,
+      Owned end-to-end delivery: domain model, processing pipeline, API design,
       RBAC/auth flows, frontend app and production deployment.
-
       Built both services, their integration and CI/CD.
       </p>
-
     </div>
   </div>
 
@@ -192,8 +219,6 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
 
 </div>
 
-
-
 <div class="lightbox" v-if="lightbox">
   <button class="close" @click="lightbox=null">×</button>
   <img v-if="!isVideo(lightbox)" :src="lightbox">
@@ -211,6 +236,7 @@ Eliminated manual follow-ups and enabled agents to systematically recover missed
     <source :src="'assets/feature/'+f.video" type="video/mp4">
   </video>
 </div>
+
 </div>
 
 <script>
@@ -218,7 +244,7 @@ const { createApp } = Vue
 
 createApp({
   data(){
-  return{
+    return{
       lightbox:null,
       index:0,
       loading:true,
@@ -251,18 +277,16 @@ createApp({
           text:"Define ownership, manage users and trigger automated weekly reminder emails.",
           video:"feature4.mp4"
         }
-    ]
+      ]
     }
   },
 
-   computed:{
+  computed:{
     active(){ return this.features[this.index] }
   },
 
   watch:{
-    index(){
-      this.loadVideo()
-    }
+    index(){ this.loadVideo() }
   },
 
   mounted(){
@@ -270,36 +294,25 @@ createApp({
   },
 
   methods:{
-
     open(src){ this.lightbox=src },
-
     isVideo(src){ return src.endsWith(".mp4") },
 
     loadVideo(){
       const v = this.$refs.featureVideo
       if(!v) return
-
       this.loading = true
-
       v.pause()
       v.src = "assets/feature/" + this.active.video
       v.load()
-
       v.oncanplay = () => {
         this.loading = false
         v.play()
       }
     },
 
-    next(){
-      this.index=(this.index+1)%this.features.length
-    },
-    prev(){
-      this.index=(this.index-1+this.features.length)%this.features.length
-    },
-    videoLoaded(){
-      this.loading = false
-    }
+    next(){ this.index=(this.index+1)%this.features.length },
+    prev(){ this.index=(this.index-1+this.features.length)%this.features.length },
+    videoLoaded(){ this.loading = false }
   }
 
 }).mount("#app")
