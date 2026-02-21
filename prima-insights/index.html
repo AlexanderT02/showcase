@@ -385,7 +385,25 @@ video,img{
   z-index:20;
 }
 
+.project-switch{
+  margin:12px 0 28px;
+}
 
+.project-switch select{
+  background:var(--card);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.08);
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:14px;
+  outline:none;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.project-switch select:hover{
+  border-color:rgba(255,255,255,.25);
+}
 </style>
 </head>
 
@@ -572,6 +590,15 @@ This turns passive shop activity into a structured follow-up workflow.
   </video>
 </div>
 
+<div style="display:none">
+  <video
+    v-for="f in features"
+    :key="f.video"
+    preload="auto"
+  >
+    <source :src="'assets/feature/'+f.video" type="video/mp4">
+  </video>
+</div>
 </div>
 
 <script>
@@ -661,7 +688,6 @@ createApp({
     next(){
       this.index=(this.index+1)%this.features.length
     },
-
     prev(){
       this.index=(this.index-1+this.features.length)%this.features.length
     }
