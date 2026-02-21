@@ -8,23 +8,7 @@
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js">
 
 </script>
-<script>
-window.__FEATURE_VIDEOS__ = [
-  "edit-overlap.mp4",
-  "metrics.mp4",
-  "admin.mp4",
-  "project-assign-timer.mp4"
-];
 
-window.__FEATURE_VIDEOS__.forEach(v=>{
-  const l=document.createElement("link");
-  l.rel="preload";
-  l.as="video";
-  l.href="assets/feature/"+v;
-  l.type="video/mp4";
-  document.head.appendChild(l);
-});
-</script>
 <style>
 :root{
   --bg:#0f1115;
@@ -467,13 +451,10 @@ billing validation workflows.
 
   <video
     ref="featureVideo"
-    :key="active.video"
     playsinline
     preload="auto"
-    @click="togglePlay"
-  >
-      <source :src="'assets/feature/'+active.video" type="video/mp4">
-    </video>
+    @click="togglePlay">
+  </video>
 
     <div class="play-overlay" v-if="!playing" @click="togglePlay">
       ▶
@@ -579,30 +560,28 @@ billing validation workflows.
 </div>
 </div>
 
-<script>
-const { createApp, nextTick } = Vue
+<script>const { createApp } = Vue
 
 createApp({
+
   data(){
     return{
       lightbox:null,
       index:0,
       playing:false,
-     ui:{
-    desktop:"dekstop.PNG",
-    devices:[
-      {class:"phone-left", img:"mobile1.PNG"},
-      {class:"phone-right", img:"mobile.PNG"},
-      {class:"tablet", img:"tablet.PNG"}
-    ]
-  },
-
+      ui:{
+        desktop:"dekstop.PNG",
+        devices:[
+          {class:"phone-left", img:"mobile1.PNG"},
+          {class:"phone-right", img:"mobile.PNG"},
+          {class:"tablet", img:"tablet.PNG"}
+        ]
+      },
       features:[
-       {title:"Timeline",text:"Review and correct recorded work sessions.",video:"edit-overlap.mp4"},
-{title:"Metrics",text:"Compare clients and departments with filtered time analytics.",video:"metrics.mp4"},
-{title:"Admin",text:"Company-wide timeline oversight and adjustments.",video:"admin.mp4"},
-{title:"Project Assignment",text:"Join or leave projects and start tracking instantly.",video:"project-assign-timer.mp4"},
-
+        {title:"Timeline",text:"Review and correct recorded work sessions.",video:"edit-overlap.mp4"},
+        {title:"Metrics",text:"Compare clients and departments with filtered time analytics.",video:"metrics.mp4"},
+        {title:"Admin",text:"Company-wide timeline oversight and adjustments.",video:"admin.mp4"},
+        {title:"Project Assignment",text:"Join or leave projects and start tracking instantly.",video:"project-assign-timer.mp4"},
       ]
     }
   },
@@ -611,44 +590,53 @@ createApp({
     active(){ return this.features[this.index] }
   },
 
-  methods:{
-  open(src){ this.lightbox=src },
-
-  isVideo(src){ return src.endsWith(".mp4") },
-
-  togglePlay(){
-    const v = this.$refs.featureVideo
-    if(!v) return
-
-    if(v.paused){
-      v.play()
-      this.playing = true
-    }else{
-      v.pause()
-      this.playing = false
+  watch:{
+    index(){
+      this.loadVideo()
     }
   },
 
-  resetVideo(){
-    const v = this.$refs.featureVideo
-    if(!v) return
-    v.pause()
-    v.currentTime = 0
+  mounted(){
+    this.loadVideo()
   },
-  async next(){
-  this.index=(this.index+1)%this.features.length
-  this.playing=false
-  await nextTick()
-  this.resetVideo()
-},
 
-async prev(){
-  this.index=(this.index-1+this.features.length)%this.features.length
-  this.playing=false
-  await nextTick()
-  this.resetVideo()
-}
-}
+  methods:{
+
+    open(src){ this.lightbox=src },
+
+    isVideo(src){ return src.endsWith(".mp4") },
+
+    togglePlay(){
+      const v = this.$refs.featureVideo
+      if(!v) return
+
+      if(v.paused){
+        v.play()
+        this.playing = true
+      }else{
+        v.pause()
+        this.playing = false
+      }
+    },
+
+    loadVideo(){
+      const v = this.$refs.featureVideo
+      if(!v) return
+
+      v.pause()
+      v.src = "assets/feature/" + this.active.video
+      v.load()
+      this.playing = false
+    },
+
+    next(){
+      this.index=(this.index+1)%this.features.length
+    },
+
+    prev(){
+      this.index=(this.index-1+this.features.length)%this.features.length
+    }
+  }
 
 }).mount("#app")
 </script>
