@@ -336,6 +336,54 @@ video,img{
 }
 
 
+.video-wrapper{
+  position:relative;
+}
+
+.play-overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:70px;
+  color:white;
+  background:rgba(0,0,0,.25);
+  backdrop-filter:blur(4px);
+  border-radius:14px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.play-overlay:hover{
+  background:rgba(0,0,0,.45);
+  transform:scale(1.02);
+}
+
+.feature-video{
+  position:relative;
+  z-index:1;
+}
+
+.video-wrapper{
+  position:relative;
+  z-index:2;
+}
+
+.nav{
+  z-index:10;
+  pointer-events:auto;
+}
+
+.play-overlay{
+  position:absolute;
+  inset:0;
+  z-index:3;
+}
+
+.nav{
+  z-index:20;
+}
 
 
 </style>
@@ -420,18 +468,20 @@ This turns passive shop activity into a structured follow-up workflow.
   <div class="feature-video">
     <button class="nav prev" @click="prev">&#10094;</button>
 
-   <video
-    :key="active.video + '-' + index"
-    autoplay
-    loop
-    muted
+   <div class="video-wrapper">
+
+  <video
+    ref="featureVideo"
     playsinline
     preload="auto"
-    @click="open('assets/feature/'+active.video)"
-  >
-    <source :src="'assets/feature/'+active.video" type="video/mp4">
+    @click="togglePlay">
   </video>
 
+    <div class="play-overlay" v-if="!playing" @click="togglePlay">
+      ▶
+    </div>
+
+  </div>
 
 
     <button class="nav next" @click="next">&#10095;</button>
@@ -532,53 +582,89 @@ createApp({
     return{
       lightbox:null,
       index:0,
-     ui:{
-    desktop:"dekstop.PNG",
-    devices:[
-      {class:"phone-left", img:"mobile1.PNG"},
-      {class:"phone-right", img:"mobile.PNG"},
-      {class:"tablet", img:"tablet.PNG"}
-    ]
-  },
-
-      features:[
-               {
-    title:"Company Copilot",
-    text:"Chat with your company data. Ask about products, clients, leads or performance — and receive structured answers instantly.",
-    video:"copilot.mp4"
-  },
-       {
-  title:"Analytics & PDF Reports",
-  text:"Filter clients, departments and time ranges — and export structured performance reports as PDF for management.",
-  video:"pdf-export.mp4"
-},
-
-{
-  title:"Operational Insights",
-  text:"Geographic customer overview combined with weekly AI-generated summaries of company insights.",
-  video:"location-insights.mp4"
-},
-
-{
-  title:"Responsibility Control",
-  text:"Define ownership, manage users and trigger automated weekly reminder emails.",
-  video:"user-managment.mp4"
-}
-
-
+      playing:false,
+      ui:{
+        desktop:"dekstop.PNG",
+        devices:[
+          {class:"phone-left", img:"mobile1.PNG"},
+          {class:"phone-right", img:"mobile.PNG"},
+          {class:"tablet", img:"tablet.PNG"}
+        ]
+      },
+      features:[{
+        title:"Company Copilot",
+        text:"Chat with your company data. Ask about products, clients, leads or performance — and receive structured answers instantly.",
+        video:"copilot.mp4"
+      },
+      {
+        title:"Analytics & PDF Reports",
+        text:"Filter clients, departments and time ranges — and export structured performance reports as PDF for management.",
+        video:"pdf-export.mp4"
+      },
+      {
+        title:"Operational Insights",
+        text:"Geographic customer overview combined with weekly AI-generated summaries of company insights.",
+        video:"location-insights.mp4"
+      },
+      {
+        title:"Responsibility Control",
+        text:"Define ownership, manage users and trigger automated weekly reminder emails.",
+        video:"user-managment.mp4"
+      }
       ]
     }
   },
 
-  computed:{
+   computed:{
     active(){ return this.features[this.index] }
   },
 
+  watch:{
+    index(){
+      this.loadVideo()
+    }
+  },
+
+  mounted(){
+    this.loadVideo()
+  },
+
   methods:{
+
     open(src){ this.lightbox=src },
+
     isVideo(src){ return src.endsWith(".mp4") },
-    next(){ this.index=(this.index+1)%this.features.length },
-    prev(){ this.index=(this.index-1+this.features.length)%this.features.length }
+
+    togglePlay(){
+      const v = this.$refs.featureVideo
+      if(!v) return
+
+      if(v.paused){
+        v.play()
+        this.playing = true
+      }else{
+        v.pause()
+        this.playing = false
+      }
+    },
+
+    loadVideo(){
+      const v = this.$refs.featureVideo
+      if(!v) return
+
+      v.pause()
+      v.src = "assets/feature/" + this.active.video
+      v.load()
+      this.playing = false
+    },
+
+    next(){
+      this.index=(this.index+1)%this.features.length
+    },
+
+    prev(){
+      this.index=(this.index-1+this.features.length)%this.features.length
+    }
   }
 
 }).mount("#app")
