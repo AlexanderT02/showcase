@@ -10,23 +10,21 @@
 </script>
 <script>
 window.__FEATURE_VIDEOS__ = [
-"edit-overlap.mp4",
-"metrics.mp4",
-"admin.mp4",
-"project-assign-timer.mp4"
+  "edit-overlap.mp4",
+  "metrics.mp4",
+  "admin.mp4",
+  "project-assign-timer.mp4"
 ];
-</script>
 
-<script>
 window.__FEATURE_VIDEOS__.forEach(v=>{
   const l=document.createElement("link");
   l.rel="preload";
   l.as="video";
-  l.href="assets/"+v;
+  l.href="assets/feature/"+v;
+  l.type="video/mp4";
   document.head.appendChild(l);
 });
 </script>
-
 <style>
 :root{
   --bg:#0f1115;
@@ -345,9 +343,54 @@ video,img{
   }
 }
 
+.video-wrapper{
+  position:relative;
+}
 
+.play-overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:70px;
+  color:white;
+  background:rgba(0,0,0,.25);
+  backdrop-filter:blur(4px);
+  border-radius:14px;
+  cursor:pointer;
+  transition:.25s;
+}
 
+.play-overlay:hover{
+  background:rgba(0,0,0,.45);
+  transform:scale(1.02);
+}
 
+.feature-video{
+  position:relative;
+  z-index:1;
+}
+
+.video-wrapper{
+  position:relative;
+  z-index:2;
+}
+
+.nav{
+  z-index:10;
+  pointer-events:auto;
+}
+
+.play-overlay{
+  position:absolute;
+  inset:0;
+  z-index:3;
+}
+
+.nav{
+  z-index:20;
+}
 </style>
 </head>
 
@@ -420,9 +463,23 @@ billing validation workflows.
   <div class="feature-video">
     <button class="nav prev" @click="prev">&#10094;</button>
 
-   <video :key="active.video" autoplay loop muted playsinline preload="auto" @click="open('assets/feature/'+active.video)">
-  <source :src="'assets/feature/'+active.video" type="video/mp4">
-</video>
+   <div class="video-wrapper">
+
+  <video
+    ref="featureVideo"
+    :key="active.video"
+    playsinline
+    preload="auto"
+    @click="togglePlay"
+  >
+      <source :src="'assets/feature/'+active.video" type="video/mp4">
+    </video>
+
+    <div class="play-overlay" v-if="!playing" @click="togglePlay">
+      ▶
+    </div>
+
+  </div>
 
 
     <button class="nav next" @click="next">&#10095;</button>
@@ -511,16 +568,26 @@ billing validation workflows.
   </video>
 </div>
 
+<div style="display:none">
+  <video
+    v-for="f in features"
+    :key="f.video"
+    preload="auto"
+  >
+    <source :src="'assets/feature/'+f.video" type="video/mp4">
+  </video>
+</div>
 </div>
 
 <script>
-const { createApp } = Vue
+const { createApp, nextTick } = Vue
 
 createApp({
   data(){
     return{
       lightbox:null,
       index:0,
+      playing:false,
      ui:{
     desktop:"dekstop.PNG",
     devices:[
@@ -545,11 +612,43 @@ createApp({
   },
 
   methods:{
-    open(src){ this.lightbox=src },
-    isVideo(src){ return src.endsWith(".mp4") },
-    next(){ this.index=(this.index+1)%this.features.length },
-    prev(){ this.index=(this.index-1+this.features.length)%this.features.length }
-  }
+  open(src){ this.lightbox=src },
+
+  isVideo(src){ return src.endsWith(".mp4") },
+
+  togglePlay(){
+    const v = this.$refs.featureVideo
+    if(!v) return
+
+    if(v.paused){
+      v.play()
+      this.playing = true
+    }else{
+      v.pause()
+      this.playing = false
+    }
+  },
+
+  resetVideo(){
+    const v = this.$refs.featureVideo
+    if(!v) return
+    v.pause()
+    v.currentTime = 0
+  },
+  async next(){
+  this.index=(this.index+1)%this.features.length
+  this.playing=false
+  await nextTick()
+  this.resetVideo()
+},
+
+async prev(){
+  this.index=(this.index-1+this.features.length)%this.features.length
+  this.playing=false
+  await nextTick()
+  this.resetVideo()
+}
+}
 
 }).mount("#app")
 </script>
