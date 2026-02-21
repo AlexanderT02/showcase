@@ -14,12 +14,12 @@
 <div id="app" class="container">
 <h1>PRIMA Clock</h1>
 <p class="meta">
-Production system used by internal teams as a reliable basis for cost allocation and invoicing preparation.
+PRIMA Clock is an internal production system that records billable work as financial data.
+It is designed to produce deterministic, reproducible billing records — not just to log time.
 </p>
 
 <p>
-Internal production system for tracking and validating billable work across clients, projects and departments.
-Designed for correctness, traceability and reproducible billing records — not just time logging.
+Used daily by internal teams as the operational basis for project costing and invoice preparation.
 </p>
 
 <div class="grid">
@@ -133,7 +133,7 @@ Designed for correctness, traceability and reproducible billing records — not 
     <h2>Consistency Rules</h2>
     <div class="card">
       <p>
-      Even with editable data, the application prevents inconsistent records before they affect reporting:
+      The system prevents invalid financial states instead of fixing them later in reports:
       </p>
       <ul>
         <li>No overlapping sessions per user</li>
@@ -149,9 +149,8 @@ Designed for correctness, traceability and reproducible billing records — not 
     <h2>Architecture Overview</h2>
     <div class="card">
       <p>
-      PRIMA Clock runs as a transactional full-stack application.
-      The backend validates and persists records in PostgreSQL, while Redis supports active sessions
-      and responsive interaction.
+      PRIMA Clock treats the backend as the single source of truth. 
+      All calculations and validations happen server-side so the UI can never create inconsistent financial data.
       </p>
       <p>
       The interface allows flexible input, but correctness is enforced server-side to keep reporting consistent.
@@ -165,14 +164,18 @@ Designed for correctness, traceability and reproducible billing records — not 
   <h2>Engineering Challenge</h2>
   <div class="card">
     <p>
-    The main challenge was unifying different recording behaviors into a single consistent data model.
-    Some users track time live with timers, others reconstruct their work at the end of the day,
-    and others correct forgotten sessions afterwards.
+    The core challenge was handling mutable historical data while reports must remain deterministic.
+    Users may track time live, reconstruct their day later or edit sessions afterwards — yet totals must always recompute identically.
     </p>
     <p>
-    The system therefore processes all inputs through the same validation pipeline.
-    Whether time comes from a running timer or a manual entry, it is normalized into
-    the same session structure and validated server-side to keep reporting consistent.
+    To guarantee consistency, all inputs pass through the same server-side normalization and validation pipeline
+    and are transformed into a unified session structure.
+    </p>
+    <p>
+    Because the worktime table grows continuously and a single day can contain many sessions,
+    pagination based on raw rows was not scalable.
+    The solution was to separate the recording model from the daily reporting view and paginate by day instead of sessions.
+    This keeps queries efficient while still allowing historical edits and accurate recalculations.
     </p>
   </div>
 </div>
